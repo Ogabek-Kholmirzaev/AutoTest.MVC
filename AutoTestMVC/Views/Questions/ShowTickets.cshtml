@@ -1,0 +1,44 @@
+﻿@using AutoTestMVC.Services
+@{
+    ViewData["Title"] = "Ticket Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Tickets Page!</h1>
+</div>
+
+<div class="tickets-indexes">
+    @{
+        for (int i = 0; i < ViewBag.ticketsCount; i++)
+        {
+            var message = string.Empty;
+
+            if (TicketsRepository.TicketsList.Exists(t => t.Index == i))
+            {
+                var ticket = TicketsRepository.TicketsList.First(t => t.Index == i);
+                var correntAnswersCount = ticket.SolvedQuestionsDictionary.Count(d => ticket.Questions[d.Key].Choices[d.Value].Answer);
+
+                message = ticket.QuestionsCount == correntAnswersCount ? "    ✅" : $"    {correntAnswersCount}/{ticket.QuestionsCount}";
+            }
+
+            <a asp-controller="Questions" asp-action="Index" asp-route-ticketIndex="@i" asp-route-isGettingNewTicket="true" class="a-ticket-index">@("Ticket " + (i + 1) + message)</a>
+        }
+    }
+</div>
+
+
+<style>
+    .tickets-indexes {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .a-ticket-index {
+        text-decoration: none;
+    }
+
+    .a-ticket-index:hover {
+        color: gray;
+        cursor: pointer;
+    }
+</style>

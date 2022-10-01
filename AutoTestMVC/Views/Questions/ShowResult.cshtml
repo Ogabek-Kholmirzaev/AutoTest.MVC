@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Result Page";
+}
+
+@model Ticket
+
+<div class="text-center">
+    <h1 class="display-4">Result Page!</h1>
+</div>
+
+<div class="div-table">
+    <table>
+        <tr>
+            <th>Questions Count</th>
+            <th>Correct Answers Count</th>
+        </tr>
+        <tr>
+            <td>@ViewBag.questionsCount</td>
+            <td>@ViewBag.correctAnswersCount</td>
+        </tr>
+    </table>
+</div>
+
+<a asp-controller="Home" asp-action="Index">Return Home Page</a>
+
+<style>
+    .div-table {
+        display: flex;
+        justify-content: center;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+</style>

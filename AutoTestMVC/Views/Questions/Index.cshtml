@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Questions Page";
+}
+
+@model QuestionEntity
+
+<div class="text-center">
+    <h1 class="display-4">Welcome Ticket @(ViewBag.ticket.Index + 1) Page!</h1>
+</div>
+
+<div class="questions-button">
+    @{
+        var questionsCount = ViewBag.ticket.Questions.Count;
+        for (int i = 0; i < questionsCount; i++)
+        {
+            var index = i + 1;
+            if (ViewBag.questionIndex == i)
+            {
+                    <a class="question-index-link" style="background: gray; font-weight: bold; color:yellow"
+                   asp-controller="Questions" asp-action="Index"
+                   asp-route-ticketIndex="@ViewBag.ticket.Index"
+                   asp-route-questionIndex="@i"
+                    >@index</a>
+            }
+            else
+            {
+                if (ViewBag.ticket.SolvedQuestionsDictionary.ContainsKey(i))
+                {
+                    var selectedChoiceIndex = ViewBag.ticket.SolvedQuestionsDictionary[i];
+
+                    if (ViewBag.ticket.Questions[i].Choices[selectedChoiceIndex].Answer)
+                    {
+                            <a class="question-index-link" style="background: lightgreen"
+                           asp-controller="Questions" asp-action="Index"
+                           asp-route-ticketIndex="@ViewBag.ticket.Index"
+                           asp-route-questionIndex="@i"
+                            >@index</a>
+                    }
+                    else
+                    {
+                            <a class="question-index-link" style="background: red"
+                           asp-controller="Questions" asp-action="Index"
+                           asp-route-ticketIndex="@ViewBag.ticket.Index"
+                           asp-route-questionIndex="@i"
+                            >@index</a>
+                    }
+                }
+                else
+                {
+                        <a class="question-index-link" 
+                       asp-controller="Questions" asp-action="Index"
+                       asp-route-ticketIndex="@ViewBag.ticket.Index"
+                       asp-route-questionIndex="@i"
+                        >@index</a>
+                }
+            }
+        }
+    }
+</div>
+
+@{
+    var imageSource = Model.Media.Exist ? $"{Model.Media.Name}.png" : "noimage.png";
+}
+
+<div class="question-entity">
+    <img src="~/Images/@imageSource" width="300" alt="Question Image"/>
+    
+    <h4 style="padding: 10px 0">@Model.Question</h4>
+    
+    <div class="choices">
+        @{
+            var isSelectedQuestion = ViewBag.ticket.SolvedQuestionsDictionary.ContainsKey(ViewBag.questionIndex);
+
+            for (int i = 0; i < Model.Choices.Count; i++)
+            {
+                var choice = Model.Choices[i];
+
+                if (ViewBag.choiceIndex != null)
+                {
+                    if (ViewBag.choiceIndex == i)
+                    {
+                        if (ViewBag.choiceResult)
+                        {
+                            <a class="choices-link" style="background: lightgreen; color: snow">@choice.Text</a>
+                        }
+                        else
+                        {
+                            <a class="choices-link" style="background: red; color: snow">@choice.Text</a>
+                        }
+
+                    }
+                    else
+                    {
+                        <a class="choices-link">@choice.Text</a>
+                    }
+
+                    continue;
+                }
+
+                if (isSelectedQuestion)
+                {
+                    var selectedChoiceIndex = ViewBag.ticket.SolvedQuestionsDictionary[ViewBag.questionIndex];
+
+                    if (selectedChoiceIndex == i)
+                    {
+                        if (ViewBag.ticket.Questions[ViewBag.questionIndex].Choices[selectedChoiceIndex].Answer)
+                        {
+                            <a class="choices-link" style="background: lightgreen; color: snow">@choice.Text</a>
+                        }
+                        else
+                        {
+                            <a class="choices-link" style="background: red; color: snow">@choice.Text</a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="choices-link">@choice.Text</a>
+                    }
+
+                    continue;
+                }
+
+                <a class="choices-link" asp-controller="Questions"
+                asp-action="Index"
+                asp-route-questionIndex="@ViewBag.questionIndex"
+                asp-route-ticketIndex="@ViewBag.ticket.Index"
+                asp-route-choiceIndex="@i"
+                >@choice.Text</a>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .questions-button {
+        display: flex;
+        vertical-align: center;
+        align-content: center;
+        
+    }
+
+    .choices {
+        display: flex;
+        align-items: left;
+        flex-direction: column;
+    }
+
+    .question-index-link {
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        vertical-align: center;
+    }
+
+    .choices-link, .question-index-link {
+        text-decoration: none;
+        background: aqua;
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .choices-link:hover, .question-index-link:hover {
+        background: aliceblue;
+        cursor: pointer;
+    }
+</style>

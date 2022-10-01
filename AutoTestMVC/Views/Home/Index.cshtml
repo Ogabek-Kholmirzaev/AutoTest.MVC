@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome Home Page!</h1>
+</div>
+
+<p><a asp-controller="Questions" asp-action="ShowTickets">Ticket</a></p>
+<p><a asp-controller="Questions" asp-action="Index" asp-route-isGettingNewTicket="true">Examination</a></p>
